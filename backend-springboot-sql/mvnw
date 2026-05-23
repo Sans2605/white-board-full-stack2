@@ -1,0 +1,46 @@
+#!/bin/sh
+# Maven Wrapper Script
+# ----------------------------------------------------------------------------
+# Licensed to the Apache Software Foundation (ASF) under one
+# or more contributor license agreements. See the NOTICE file
+# distributed with this work for additional information
+# regarding copyright ownership.
+# ----------------------------------------------------------------------------
+
+set -e
+
+# OS specific support.
+cygwin=false
+darwin=false
+mingw=false
+case "$(uname)" in
+  CYGWIN*) cygwin=true ;;
+  Darwin*) darwin=true ;;
+  MINGW*) mingw=true ;;
+esac
+
+[ -z "$JAVA_HOME" ] && JAVA_HOME_FROM_PATH=$(which java 2>/dev/null)
+if [ -n "$JAVA_HOME_FROM_PATH" ]; then
+  JAVA_HOME_FROM_PATH=$(dirname "$(dirname "$JAVA_HOME_FROM_PATH")")
+fi
+
+# Determine the Maven home
+MAVEN_WRAPPER_PROPERTIES="$(dirname "$0")/.mvn/wrapper/maven-wrapper.properties"
+if [ -f "$MAVEN_WRAPPER_PROPERTIES" ]; then
+  DISTRIBUTION_URL=$(grep distributionUrl "$MAVEN_WRAPPER_PROPERTIES" | cut -d= -f2-)
+fi
+
+MVN_CMD=$(which mvn 2>/dev/null || echo "")
+
+if [ -n "$MVN_CMD" ]; then
+  exec "$MVN_CMD" "$@"
+fi
+
+# If mvn not found, try downloading
+WRAPPER_JAR="$(dirname "$0")/.mvn/wrapper/maven-wrapper.jar"
+if [ -f "$WRAPPER_JAR" ]; then
+  exec java -jar "$WRAPPER_JAR" "$@"
+fi
+
+echo "ERROR: Maven not found. Please install Maven: https://maven.apache.org/install.html" >&2
+exit 1
